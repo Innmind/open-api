@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI;
 
 use Innmind\Url\Url;
+use Innmind\Immutable\Sequence;
 
 /**
  * @psalm-immutable
@@ -39,6 +40,14 @@ enum OpenAPI
         SecurityScheme ...$schemes,
     ): Document {
         return Document::of($this)->securitySchemes($scheme, ...$schemes);
+    }
+
+    /**
+     * @param Sequence<Path> $paths
+     */
+    public function paths(Sequence $paths): Document
+    {
+        return Document::of($this)->paths($paths);
     }
 
     /**

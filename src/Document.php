@@ -16,6 +16,8 @@ final class Document
     private Sequence $tags;
     /** @var Sequence<SecurityScheme> */
     private Sequence $securitySchemes;
+    /** @var Sequence<Path> */
+    private Sequence $paths;
 
     /**
      * @psalm-mutation-free
@@ -23,6 +25,7 @@ final class Document
      * @param Sequence<array{Url, ?string}> $servers
      * @param Sequence<Tag> $tags
      * @param Sequence<SecurityScheme> $securitySchemes
+     * @param Sequence<Path> $paths
      */
     private function __construct(
         OpenAPI $version,
@@ -30,12 +33,14 @@ final class Document
         Sequence $servers,
         Sequence $tags,
         Sequence $securitySchemes,
+        Sequence $paths,
     ) {
         $this->version = $version;
         $this->info = $info;
         $this->servers = $servers;
         $this->tags = $tags;
         $this->securitySchemes = $securitySchemes;
+        $this->paths = $paths;
     }
 
     /**
@@ -43,12 +48,15 @@ final class Document
      */
     public static function of(OpenAPI $version): self
     {
+        // Use a lazy Sequence for paths to allow not keep all of them in memory
+        // when no longer used as it can become quite large
         return new self(
             $version,
             null,
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
+            Sequence::lazyStartingWith(),
         );
     }
 
@@ -69,6 +77,7 @@ final class Document
             $this->servers,
             $this->tags,
             $this->securitySchemes,
+            $this->paths,
         );
     }
 
@@ -83,6 +92,7 @@ final class Document
             ($this->servers)([$server, $description]),
             $this->tags,
             $this->securitySchemes,
+            $this->paths,
         );
     }
 
@@ -97,6 +107,7 @@ final class Document
             $this->servers,
             $this->tags->append(Sequence::of($tag, ...$tags)),
             $this->securitySchemes,
+            $this->paths,
         );
     }
 
@@ -113,6 +124,24 @@ final class Document
             $this->servers,
             $this->tags,
             $this->securitySchemes->append(Sequence::of($scheme, ...$schemes)),
+            $this->paths,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param Sequence<Path> $paths
+     */
+    public function paths(Sequence $paths): self
+    {
+        return new self(
+            $this->version,
+            $this->info,
+            $this->servers,
+            $this->tags,
+            $this->securitySchemes,
+            $this->paths->append($paths),
         );
     }
 }
