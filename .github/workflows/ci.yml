@@ -26,8 +26,6 @@ jobs:
           dependency-versions: ${{ matrix.dependencies }}
       - name: BlackBox
         run: php blackbox.php
-        env:
-          BLACKBOX_SET_SIZE: 20
   coverage:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -53,7 +51,6 @@ jobs:
         run: php blackbox.php
         env:
           ENABLE_COVERAGE: 'true'
-          BLACKBOX_SET_SIZE: 1
       - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
