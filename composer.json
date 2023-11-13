@@ -1,0 +1,30 @@
+{
+    "name": "innmind/open-api",
+    "type": "library",
+    "description": "",
+    "keywords": ["OpenAPI"],
+    "homepage": "http://github.com/innmind/open-api",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Baptiste Langlade",
+            "email": "baptiste.langlade@hey.com"
+        }
+    ],
+    "support": {
+        "issues": "http://github.com/innmind/open-api/issues"
+    },
+    "require": {
+        "php": "~8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Innmind\\OpenAPI\\": "src/"
+        }
+    },
+    "require-dev": {
+        "vimeo/psalm": "~5.0",
+        "innmind/black-box": "~5.0",
+        "innmind/coding-standard": "~2.0"
+    }
+}
