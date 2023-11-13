@@ -21,6 +21,8 @@ final class Operation
     private Sequence $parameters;
     /** @var Sequence<Request> */
     private Sequence $requests;
+    /** @var Sequence<Response> */
+    private Sequence $responses;
 
     /**
      * @psalm-mutation-free
@@ -30,6 +32,7 @@ final class Operation
      * @param Sequence<SecurityScheme> $securitySchemes
      * @param Sequence<Parameter> $parameters
      * @param Sequence<Request> $requests
+     * @param Sequence<Response> $responses
      */
     private function __construct(
         Method $method,
@@ -40,6 +43,7 @@ final class Operation
         Sequence $securitySchemes,
         Sequence $parameters,
         Sequence $requests,
+        Sequence $responses,
     ) {
         $this->method = $method;
         $this->id = $id;
@@ -49,6 +53,7 @@ final class Operation
         $this->securitySchemes = $securitySchemes;
         $this->parameters = $parameters;
         $this->requests = $requests;
+        $this->responses = $responses;
     }
 
     /**
@@ -66,6 +71,7 @@ final class Operation
             $summary,
             $description,
             $id,
+            Sequence::of(),
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
@@ -92,6 +98,7 @@ final class Operation
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
+            Sequence::of(),
         );
     }
 
@@ -110,6 +117,7 @@ final class Operation
             $summary,
             $description,
             $id,
+            Sequence::of(),
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
@@ -136,6 +144,7 @@ final class Operation
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
+            Sequence::of(),
         );
     }
 
@@ -154,6 +163,7 @@ final class Operation
             $summary,
             $description,
             $id,
+            Sequence::of(),
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
@@ -180,6 +190,7 @@ final class Operation
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
+            Sequence::of(),
         );
     }
 
@@ -198,6 +209,7 @@ final class Operation
             $summary,
             $description,
             $id,
+            Sequence::of(),
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
@@ -224,6 +236,7 @@ final class Operation
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
+            Sequence::of(),
         );
     }
 
@@ -241,6 +254,7 @@ final class Operation
             $this->securitySchemes,
             $this->parameters,
             $this->requests,
+            $this->responses,
         );
     }
 
@@ -260,6 +274,7 @@ final class Operation
             $this->securitySchemes->append(Sequence::of($scheme, ...$schemes)),
             $this->parameters,
             $this->requests,
+            $this->responses,
         );
     }
 
@@ -279,6 +294,7 @@ final class Operation
             $this->securitySchemes,
             $this->parameters->append(Sequence::of($parameter, ...$parameters)),
             $this->requests,
+            $this->responses,
         );
     }
 
@@ -298,6 +314,27 @@ final class Operation
             $this->securitySchemes,
             $this->parameters,
             $this->requests->append(Sequence::of($request, ...$requests)),
+            $this->responses,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function responses(
+        Response $response,
+        Response ...$responses,
+    ): self {
+        return new self(
+            $this->method,
+            $this->summary,
+            $this->description,
+            $this->id,
+            $this->tags,
+            $this->securitySchemes,
+            $this->parameters,
+            $this->requests,
+            $this->responses->append(Sequence::of($response, ...$responses)),
         );
     }
 }
