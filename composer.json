@@ -15,7 +15,12 @@
         "issues": "http://github.com/innmind/open-api/issues"
     },
     "require": {
-        "php": "~8.2"
+        "php": "~8.2",
+        "innmind/immutable": "~5.3",
+        "innmind/validation": "~1.0",
+        "innmind/http": "~7.0",
+        "innmind/url": "~4.3",
+        "innmind/url-template": "~3.1"
     },
     "autoload": {
         "psr-4": {
