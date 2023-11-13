@@ -20,7 +20,8 @@
         "innmind/validation": "~1.0",
         "innmind/http": "~7.0",
         "innmind/url": "~4.3",
-        "innmind/url-template": "~3.1"
+        "innmind/url-template": "~3.1",
+        "innmind/media-type": "~2.2"
     },
     "autoload": {
         "psr-4": {
