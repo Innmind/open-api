@@ -18,7 +18,7 @@ use Innmind\OpenAPI\Type\{
 };
 use Innmind\MediaType\MediaType;
 
-final class Inline
+final class Definition
 {
     private MediaType $mediaType;
     private Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $content;

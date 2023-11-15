@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI;
 
 use Innmind\OpenAPI\{
-    Response\Inline,
+    Response\Definition,
     Type\Shape,
     Type\Sequence,
     Type\Str,
@@ -23,14 +23,14 @@ use Innmind\MediaType\MediaType;
 final class Response
 {
     private StatusCode $statusCode;
-    private ?Inline $description;
+    private ?Definition $description;
 
     /**
      * @psalm-mutation-free
      */
     private function __construct(
         StatusCode $statusCode,
-        ?Inline $description,
+        ?Definition $description,
     ) {
         $this->statusCode = $statusCode;
         $this->description = $description;
@@ -51,7 +51,7 @@ final class Response
     ): self {
         return new self(
             $this->statusCode,
-            Inline::of(
+            Definition::of(
                 $mediaType,
                 $content,
                 $description,
