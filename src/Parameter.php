@@ -100,4 +100,22 @@ final class Parameter
             true,
         );
     }
+
+    public function toArray(): array
+    {
+        $parameter = [
+            'in' => $this->in->name,
+            'name' => $this->name,
+        ];
+
+        if (\is_string($this->description)) {
+            $parameter['description'] = $this->description;
+        }
+
+        if ($this->required) {
+            $parameter['required'] = $this->required;
+        }
+
+        return $parameter;
+    }
 }

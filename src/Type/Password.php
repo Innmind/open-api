@@ -35,4 +35,12 @@ final class Password
     {
         return new self($this->type->nullable());
     }
+
+    public function toArray(): array
+    {
+        $type = $this->type->toArray();
+        $type['format'] = 'password';
+
+        return $type;
+    }
 }

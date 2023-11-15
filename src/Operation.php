@@ -4,7 +4,10 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI;
 
 use Innmind\Http\Method;
-use Innmind\Immutable\Sequence;
+use Innmind\Immutable\{
+    Sequence,
+    Set,
+};
 
 final class Operation
 {
@@ -13,10 +16,9 @@ final class Operation
     private ?string $id;
     private ?string $summary;
     private ?string $description;
-    /** @var Sequence<Tag> */
-    private Sequence $tags;
-    /** @var Sequence<SecurityScheme> */
-    private Sequence $securitySchemes;
+    /** @var Set<Tag> */
+    private Set $tags;
+    private bool $disableSecurity;
     /** @var Sequence<Parameter> */
     private Sequence $parameters;
     /** @var Sequence<Request> */
@@ -28,8 +30,7 @@ final class Operation
      * @psalm-mutation-free
      *
      * @param ?non-empty-string $id
-     * @param Sequence<Tag> $tags
-     * @param Sequence<SecurityScheme> $securitySchemes
+     * @param Set<Tag> $tags
      * @param Sequence<Parameter> $parameters
      * @param Sequence<Request> $requests
      * @param Sequence<Response> $responses
@@ -39,8 +40,8 @@ final class Operation
         ?string $summary,
         ?string $description,
         ?string $id,
-        Sequence $tags,
-        Sequence $securitySchemes,
+        Set $tags,
+        bool $disableSecurity,
         Sequence $parameters,
         Sequence $requests,
         Sequence $responses,
@@ -50,7 +51,7 @@ final class Operation
         $this->summary = $summary;
         $this->description = $description;
         $this->tags = $tags;
-        $this->securitySchemes = $securitySchemes;
+        $this->disableSecurity = $disableSecurity;
         $this->parameters = $parameters;
         $this->requests = $requests;
         $this->responses = $responses;
@@ -71,8 +72,8 @@ final class Operation
             $summary,
             $description,
             $id,
-            Sequence::of(),
-            Sequence::of(),
+            Set::of(),
+            false,
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
@@ -94,8 +95,8 @@ final class Operation
             $summary,
             $description,
             $id,
-            Sequence::of(),
-            Sequence::of(),
+            Set::of(),
+            false,
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
@@ -117,8 +118,8 @@ final class Operation
             $summary,
             $description,
             $id,
-            Sequence::of(),
-            Sequence::of(),
+            Set::of(),
+            false,
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
@@ -140,8 +141,8 @@ final class Operation
             $summary,
             $description,
             $id,
-            Sequence::of(),
-            Sequence::of(),
+            Set::of(),
+            false,
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
@@ -163,8 +164,8 @@ final class Operation
             $summary,
             $description,
             $id,
-            Sequence::of(),
-            Sequence::of(),
+            Set::of(),
+            false,
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
@@ -186,8 +187,8 @@ final class Operation
             $summary,
             $description,
             $id,
-            Sequence::of(),
-            Sequence::of(),
+            Set::of(),
+            false,
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
@@ -209,8 +210,8 @@ final class Operation
             $summary,
             $description,
             $id,
-            Sequence::of(),
-            Sequence::of(),
+            Set::of(),
+            false,
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
@@ -232,8 +233,8 @@ final class Operation
             $summary,
             $description,
             $id,
-            Sequence::of(),
-            Sequence::of(),
+            Set::of(),
+            false,
             Sequence::of(),
             Sequence::of(),
             Sequence::of(),
@@ -250,8 +251,8 @@ final class Operation
             $this->summary,
             $this->description,
             $this->id,
-            $this->tags->append(Sequence::of($tag, ...$tags)),
-            $this->securitySchemes,
+            $this->tags->merge(Set::of($tag, ...$tags)),
+            $this->disableSecurity,
             $this->parameters,
             $this->requests,
             $this->responses,
@@ -261,17 +262,15 @@ final class Operation
     /**
      * @psalm-mutation-free
      */
-    public function securedBy(
-        SecurityScheme $scheme,
-        SecurityScheme ...$schemes,
-    ): self {
+    public function disableSecurity(): self
+    {
         return new self(
             $this->method,
             $this->summary,
             $this->description,
             $this->id,
             $this->tags,
-            $this->securitySchemes->append(Sequence::of($scheme, ...$schemes)),
+            true,
             $this->parameters,
             $this->requests,
             $this->responses,
@@ -291,7 +290,7 @@ final class Operation
             $this->description,
             $this->id,
             $this->tags,
-            $this->securitySchemes,
+            $this->disableSecurity,
             $this->parameters->append(Sequence::of($parameter, ...$parameters)),
             $this->requests,
             $this->responses,
@@ -311,7 +310,7 @@ final class Operation
             $this->description,
             $this->id,
             $this->tags,
-            $this->securitySchemes,
+            $this->disableSecurity,
             $this->parameters,
             $this->requests->append(Sequence::of($request, ...$requests)),
             $this->responses,
@@ -331,10 +330,66 @@ final class Operation
             $this->description,
             $this->id,
             $this->tags,
-            $this->securitySchemes,
+            $this->disableSecurity,
             $this->parameters,
             $this->requests,
             $this->responses->append(Sequence::of($response, ...$responses)),
         );
+    }
+
+    public function toArray(): array
+    {
+        $operation = [];
+
+        if (\is_string($this->summary)) {
+            $operation['summary'] = $this->summary;
+        }
+
+        if (\is_string($this->description)) {
+            $operation['description'] = $this->description;
+        }
+
+        if (\is_string($this->id)) {
+            $operation['operationId'] = $this->id;
+        }
+
+        if (!$this->tags->empty()) {
+            $operation['tags'] = $this
+                ->tags
+                ->map(static fn($tag) => $tag->name())
+                ->toList();
+        }
+
+        if ($this->disableSecurity) {
+            $operation['security'] = [];
+        }
+
+        if (!$this->parameters->empty()) {
+            $operation['parameters'] = $this
+                ->parameters
+                ->map(static fn($parameter) => $parameter->toArray())
+                ->toList();
+        }
+
+        if (!$this->requests->empty()) {
+            $operation['requestBody'] = \array_merge(
+                ...$this
+                    ->requests
+                    ->map(static fn($request) => $request->toArray())
+                    ->toList(),
+            );
+            $operation['requestBody']['required'] = true;
+        }
+
+        if (!$this->responses->empty()) {
+            $operation['responses'] = \array_merge(
+                ...$this
+                    ->responses
+                    ->map(static fn($response) => $response->toArray())
+                    ->toList(),
+            );
+        }
+
+        return [$this->method->name => $operation];
     }
 }

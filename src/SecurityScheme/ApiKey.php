@@ -52,4 +52,16 @@ final class ApiKey
     {
         return new self(In::cookie, $name);
     }
+
+    /**
+     * @return array{type: non-empty-string, name: non-empty-string, in: non-empty-string}
+     */
+    public function toArray(): array
+    {
+        return [
+            'type' => 'apiKey',
+            'name' => $this->name,
+            'in' => $this->in->name,
+        ];
+    }
 }

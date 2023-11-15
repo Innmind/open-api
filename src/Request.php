@@ -22,7 +22,6 @@ final class Request
 {
     private MediaType $mediaType;
     private Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema;
-    private ?array $example;
 
     /**
      * @psalm-mutation-free
@@ -30,11 +29,9 @@ final class Request
     private function __construct(
         MediaType $mediaType,
         Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema,
-        ?array $example,
     ) {
         $this->mediaType = $mediaType;
         $this->schema = $schema;
-        $this->example = $example;
     }
 
     /**
@@ -47,19 +44,11 @@ final class Request
         return new self(
             $mediaType,
             $schema,
-            null,
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    public function example(array $example): self
+    public function toArray(): array
     {
-        return new self(
-            $this->mediaType,
-            $this->schema,
-            $example,
-        );
+        return [$this->mediaType->toString() => $this->schema->toArray()];
     }
 }

@@ -207,4 +207,99 @@ final class Document
             $this->paths->append($paths),
         );
     }
+
+    /**
+     * @return array{
+     *     openapi: non-empty-string,
+     *     info?: array{
+     *         title: non-empty-string,
+     *         version: non-empty-string,
+     *         description?: string,
+     *     },
+     *     servers?: list<array{url: string, description?: string}>,
+     *     tags?: list<array{name: non-empty-string, description?: string}>,
+     *     paths?: array<non-empty-string, array>,
+     *     components?: array{
+     *         securitySchemes?: array<non-empty-string, array>,
+     *         responses?: array<non-empty-string, array>,
+     *         schemas?: array<non-empty-string, array>,
+     *     },
+     * }
+     */
+    public function toArray(): array
+    {
+        $document = ['openapi' => $this->version->toString()];
+
+        if ($this->info) {
+            $document['info'] = $this->info->toArray();
+        }
+
+        if (!$this->servers->empty()) {
+            $document['servers'] = $this
+                ->servers
+                ->map(static fn($pair) => match ($pair[1]) {
+                    null => ['url' => $pair[0]->toString()],
+                    default => [
+                        'url' => $pair[0]->toString(),
+                        'description' => $pair[1],
+                    ],
+                })
+                ->toList();
+        }
+
+        if (!$this->tags->empty()) {
+            $document['tags'] = $this
+                ->tags
+                ->map(static fn($tag) => match ($tag->description()) {
+                    null => ['name' => $tag->name()],
+                    default => [
+                        'name' => $tag->name(),
+                        'description' => $tag->description(),
+                    ],
+                })
+                ->toList();
+        }
+
+        if (!$this->securitySchemes->empty()) {
+            $document['components'] = [];
+            $document['components']['securitySchemes'] = \array_merge(
+                ...$this
+                    ->securitySchemes
+                    ->map(static fn($scheme) => match ($scheme->description()) {
+                        null => [$scheme->name() => $scheme->type()->toArray()],
+                        default => [$scheme->name() => \array_merge(
+                            $scheme->type()->toArray(),
+                            ['description' => $scheme->description()],
+                        )],
+                    })
+                    ->toList(),
+            );
+        }
+
+        if (!$this->responses->empty()) {
+            $document['components'] ??= [];
+            $document['components']['responses'] = \array_merge(
+                ...$this
+                    ->responses
+                    ->map(static fn($response) => [
+                        $response->name() => $response->definition()->toArray(),
+                    ])
+                    ->toList(),
+            );
+        }
+
+        if (!$this->responses->empty()) {
+            $document['components'] ??= [];
+            $document['components']['schemas'] = \array_merge(
+                ...$this
+                    ->schemas
+                    ->map(static fn($schema) => [
+                        $schema->name() => $schema->type()->toArray(),
+                    ])
+                    ->toList(),
+            );
+        }
+
+        return $document;
+    }
 }

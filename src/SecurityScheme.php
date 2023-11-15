@@ -13,6 +13,10 @@ use Innmind\OpenAPI\SecurityScheme\{
  */
 interface SecurityScheme extends \UnitEnum
 {
+    /**
+     * @return non-empty-string
+     */
+    public function name(): string;
     public function type(): ApiKey|Http;
     public function description(): ?string;
 }

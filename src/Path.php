@@ -58,4 +58,23 @@ final class Path
             $this->parameters->append(Sequence::of($parameter, ...$parameters)),
         );
     }
+
+    public function toArray(): array
+    {
+        $description = \array_merge(
+            ...$this
+                ->operations
+                ->map(static fn($operation) => $operation->toArray())
+                ->toList(),
+        );
+
+        if (!$this->parameters->empty()) {
+            $description['parameters'] = $this
+                ->parameters
+                ->map(static fn($parameter) => $parameter->toArray())
+                ->toList();
+        }
+
+        return [$this->template->toString() => $description];
+    }
 }

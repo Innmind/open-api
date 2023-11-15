@@ -24,4 +24,15 @@ final class Http
     {
         return new self(Scheme::bearer);
     }
+
+    /**
+     * @return array{type: non-empty-string, scheme: non-empty-string}
+     */
+    public function toArray(): array
+    {
+        return [
+            'type' => 'http',
+            'scheme' => $this->scheme->name,
+        ];
+    }
 }

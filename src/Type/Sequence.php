@@ -74,4 +74,35 @@ final class Sequence
             true,
         );
     }
+
+    public function toArray(): array
+    {
+        $type = [
+            'type' => 'integer',
+            'items' => match (true) {
+                $this->items instanceof Schema => [
+                    '$ref' => "#/components/schemas/{$this->items->name()}",
+                ],
+                default => $this->items->toArray(),
+            },
+        ];
+
+        if (\is_string($this->title)) {
+            $type['title'] = $this->title;
+        }
+
+        if (\is_string($this->description)) {
+            $type['description'] = $this->description;
+        }
+
+        if (\is_array($this->example)) {
+            $type['example'] = $this->example;
+        }
+
+        if ($this->nullable) {
+            $type['nullable'] = $this->nullable;
+        }
+
+        return $type;
+    }
 }

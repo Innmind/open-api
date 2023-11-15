@@ -64,4 +64,17 @@ final class Response
     {
         return new self($this->statusCode, $reference);
     }
+
+    public function toArray(): array
+    {
+        $response = match (true) {
+            \is_null($this->description) => [],
+            $this->description instanceof Reference => [
+                '$ref' => "#/components/responses/{$this->description->name()}",
+            ],
+            default => $this->description->toArray(),
+        };
+
+        return [$this->statusCode->toInt() => $response];
+    }
 }

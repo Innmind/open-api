@@ -57,4 +57,27 @@ final class Number
             true,
         );
     }
+
+    public function toArray(): array
+    {
+        $type = ['type' => 'number'];
+
+        if (\is_string($this->title)) {
+            $type['title'] = $this->title;
+        }
+
+        if (\is_string($this->description)) {
+            $type['description'] = $this->description;
+        }
+
+        if (\is_float($this->example)) {
+            $type['example'] = $this->example;
+        }
+
+        if ($this->nullable) {
+            $type['nullable'] = $this->nullable;
+        }
+
+        return $type;
+    }
 }

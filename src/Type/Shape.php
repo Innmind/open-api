@@ -5,7 +5,7 @@ namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Schema;
 use Innmind\Immutable\{
-    Sequence,
+    Sequence as Seq,
     Map,
 };
 
@@ -18,21 +18,21 @@ final class Shape
 {
     private ?string $title;
     private ?string $description;
-    /** @var Sequence<non-empty-string> */
-    private Sequence $required;
+    /** @var Seq<non-empty-string> */
+    private Seq $required;
     /** @var Map<non-empty-string, Schema|self|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number> */
     private Map $properties;
     private ?array $example;
     private bool $nullable;
 
     /**
-     * @param Sequence<non-empty-string> $required
+     * @param Seq<non-empty-string> $required
      * @param Map<non-empty-string, Schema|self|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number> $properties
      */
     private function __construct(
         ?string $title,
         ?string $description,
-        Sequence $required,
+        Seq $required,
         Map $properties,
         ?array $example,
         bool $nullable,
@@ -53,7 +53,7 @@ final class Shape
         return new self(
             $title,
             $description,
-            Sequence::of(),
+            Seq::of(),
             Map::of(),
             null,
             false,
@@ -112,5 +112,47 @@ final class Shape
             $this->example,
             true,
         );
+    }
+
+    public function toArray(): array
+    {
+        $type = ['type' => 'object'];
+
+        if (!$this->required->empty()) {
+            $type['required'] = $this->required->toList();
+        }
+
+        if (!$this->properties->empty()) {
+            $type['properties'] = \array_merge(
+                ...$this
+                    ->properties
+                    ->map(static fn($name, $type) => match (true) {
+                        $type instanceof Schema => [$name => [
+                            '$ref' => "#/components/schemas/{$type->name()}",
+                        ]],
+                        default => [$name, $type->toArray()],
+                    })
+                    ->values()
+                    ->toList(),
+            );
+        }
+
+        if (\is_string($this->title)) {
+            $type['title'] = $this->title;
+        }
+
+        if (\is_string($this->description)) {
+            $type['description'] = $this->description;
+        }
+
+        if (\is_array($this->example)) {
+            $type['example'] = $this->example;
+        }
+
+        if ($this->nullable) {
+            $type['nullable'] = $this->nullable;
+        }
+
+        return $type;
     }
 }

@@ -41,4 +41,25 @@ final class Info
     ): self {
         return new self($title, $version, $description);
     }
+
+    /**
+     * @return array{
+     *     title: non-empty-string,
+     *     version: non-empty-string,
+     *     description?: string,
+     * }
+     */
+    public function toArray(): array
+    {
+        $info = [
+            'title' => $this->title,
+            'version' => $this->version,
+        ];
+
+        if (\is_string($this->description)) {
+            $info['description'] = $this->description;
+        }
+
+        return $info;
+    }
 }

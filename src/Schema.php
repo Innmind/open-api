@@ -17,6 +17,9 @@ use Innmind\OpenAPI\Type\{
     Number,
 };
 
+/**
+ * @psalm-immutable
+ */
 interface Schema extends \UnitEnum
 {
     /**
