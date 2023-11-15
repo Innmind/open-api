@@ -4,7 +4,10 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI;
 
 use Innmind\Url\Url;
-use Innmind\Immutable\Sequence;
+use Innmind\Immutable\{
+    Sequence,
+    Set,
+};
 
 final class Document
 {
@@ -12,10 +15,14 @@ final class Document
     private ?Info $info;
     /** @var Sequence<array{Url, ?string}> */
     private Sequence $servers;
-    /** @var Sequence<Tag> */
-    private Sequence $tags;
-    /** @var Sequence<SecurityScheme> */
-    private Sequence $securitySchemes;
+    /** @var Set<Tag> */
+    private Set $tags;
+    /** @var Set<SecurityScheme> */
+    private Set $securitySchemes;
+    /** @var Set<Response\Reference> */
+    private Set $responses;
+    /** @var Set<Schema> */
+    private Set $schemas;
     /** @var Sequence<Path> */
     private Sequence $paths;
 
@@ -23,16 +30,20 @@ final class Document
      * @psalm-mutation-free
      *
      * @param Sequence<array{Url, ?string}> $servers
-     * @param Sequence<Tag> $tags
-     * @param Sequence<SecurityScheme> $securitySchemes
+     * @param Set<Tag> $tags
+     * @param Set<SecurityScheme> $securitySchemes
+     * @param Set<Response\Reference> $responses
+     * @param Set<Schema> $schemas
      * @param Sequence<Path> $paths
      */
     private function __construct(
         OpenAPI $version,
         ?Info $info,
         Sequence $servers,
-        Sequence $tags,
-        Sequence $securitySchemes,
+        Set $tags,
+        Set $securitySchemes,
+        Set $responses,
+        Set $schemas,
         Sequence $paths,
     ) {
         $this->version = $version;
@@ -40,6 +51,8 @@ final class Document
         $this->servers = $servers;
         $this->tags = $tags;
         $this->securitySchemes = $securitySchemes;
+        $this->responses = $responses;
+        $this->schemas = $schemas;
         $this->paths = $paths;
     }
 
@@ -54,8 +67,10 @@ final class Document
             $version,
             null,
             Sequence::of(),
-            Sequence::of(),
-            Sequence::of(),
+            Set::of(),
+            Set::of(),
+            Set::of(),
+            Set::of(),
             Sequence::lazyStartingWith(),
         );
     }
@@ -77,6 +92,8 @@ final class Document
             $this->servers,
             $this->tags,
             $this->securitySchemes,
+            $this->responses,
+            $this->schemas,
             $this->paths,
         );
     }
@@ -92,6 +109,8 @@ final class Document
             ($this->servers)([$server, $description]),
             $this->tags,
             $this->securitySchemes,
+            $this->responses,
+            $this->schemas,
             $this->paths,
         );
     }
@@ -105,8 +124,10 @@ final class Document
             $this->version,
             $this->info,
             $this->servers,
-            $this->tags->append(Sequence::of($tag, ...$tags)),
+            $this->tags->merge(Set::of($tag, ...$tags)),
             $this->securitySchemes,
+            $this->responses,
+            $this->schemas,
             $this->paths,
         );
     }
@@ -123,7 +144,47 @@ final class Document
             $this->info,
             $this->servers,
             $this->tags,
-            $this->securitySchemes->append(Sequence::of($scheme, ...$schemes)),
+            $this->securitySchemes->merge(Set::of($scheme, ...$schemes)),
+            $this->responses,
+            $this->schemas,
+            $this->paths,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function responses(
+        Response\Reference $response,
+        Response\Reference ...$responses,
+    ): self {
+        return new self(
+            $this->version,
+            $this->info,
+            $this->servers,
+            $this->tags,
+            $this->securitySchemes,
+            $this->responses->merge(Set::of($response, ...$responses)),
+            $this->schemas,
+            $this->paths,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function schemas(
+        Schema $schema,
+        Schema ...$schemas,
+    ): self {
+        return new self(
+            $this->version,
+            $this->info,
+            $this->servers,
+            $this->tags,
+            $this->securitySchemes,
+            $this->responses,
+            $this->schemas->merge(Set::of($schema, ...$schemas)),
             $this->paths,
         );
     }
@@ -141,6 +202,8 @@ final class Document
             $this->servers,
             $this->tags,
             $this->securitySchemes,
+            $this->responses,
+            $this->schemas,
             $this->paths->append($paths),
         );
     }
