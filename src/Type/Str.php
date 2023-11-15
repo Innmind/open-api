@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI\Type;
 
+use Innmind\Immutable\RegExp;
+
 /**
  * @psalm-immutable
  */
@@ -12,17 +14,20 @@ final class Str
     private ?string $description;
     private ?string $example;
     private bool $nullable;
+    private ?RegExp $pattern;
 
     private function __construct(
         ?string $title,
         ?string $description,
         ?string $example,
         bool $nullable,
+        ?RegExp $pattern,
     ) {
         $this->title = $title;
         $this->description = $description;
         $this->example = $example;
         $this->nullable = $nullable;
+        $this->pattern = $pattern;
     }
 
     /**
@@ -35,6 +40,7 @@ final class Str
             $description,
             null,
             false,
+            null,
         );
     }
 
@@ -45,6 +51,7 @@ final class Str
             $this->description,
             $example,
             $this->nullable,
+            $this->pattern,
         );
     }
 
@@ -55,6 +62,18 @@ final class Str
             $this->description,
             $this->example,
             true,
+            $this->pattern,
+        );
+    }
+
+    public function restrictVia(RegExp $pattern): self
+    {
+        return new self(
+            $this->title,
+            $this->description,
+            $this->example,
+            $this->nullable,
+            $pattern,
         );
     }
 }
