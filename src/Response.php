@@ -5,6 +5,7 @@ namespace Innmind\OpenAPI;
 
 use Innmind\OpenAPI\{
     Response\Definition,
+    Response\Reference,
     Type\Shape,
     Type\Sequence,
     Type\Str,
@@ -23,14 +24,14 @@ use Innmind\MediaType\MediaType;
 final class Response
 {
     private StatusCode $statusCode;
-    private ?Definition $description;
+    private Definition|Reference|null $description;
 
     /**
      * @psalm-mutation-free
      */
     private function __construct(
         StatusCode $statusCode,
-        ?Definition $description,
+        Definition|Reference|null $description,
     ) {
         $this->statusCode = $statusCode;
         $this->description = $description;
@@ -57,5 +58,10 @@ final class Response
                 $description,
             ),
         );
+    }
+
+    public function references(Reference $reference): self
+    {
+        return new self($this->statusCode, $reference);
     }
 }
