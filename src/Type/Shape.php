@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI\Type;
 
+use Innmind\OpenAPI\Schema;
 use Innmind\Immutable\{
     Sequence,
     Map,
@@ -19,14 +20,14 @@ final class Shape
     private ?string $description;
     /** @var Sequence<non-empty-string> */
     private Sequence $required;
-    /** @var Map<non-empty-string, self|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number> */
+    /** @var Map<non-empty-string, Schema|self|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number> */
     private Map $properties;
     private ?array $example;
     private bool $nullable;
 
     /**
      * @param Sequence<non-empty-string> $required
-     * @param Map<non-empty-string, self|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number> $properties
+     * @param Map<non-empty-string, Schema|self|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number> $properties
      */
     private function __construct(
         ?string $title,
@@ -62,7 +63,7 @@ final class Shape
     /**
      * @param non-empty-string $name
      */
-    public function property(string $name, self|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema): self
+    public function property(string $name, Schema|self|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema): self
     {
         return new self(
             $this->title,
