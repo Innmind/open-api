@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI\Type;
 
+use Innmind\OpenAPI\Type;
 use Innmind\Immutable\{
     RegExp,
     Str as S,
@@ -11,7 +12,7 @@ use Innmind\Immutable\{
 /**
  * @psalm-immutable
  */
-final class Str
+final class Str implements Type
 {
     private ?string $title;
     private ?string $description;

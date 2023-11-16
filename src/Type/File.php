@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI\Type;
 
+use Innmind\OpenAPI\Type;
+
 /**
  * @psalm-immutable
  */
-final class File
+final class File implements Type
 {
     private Str $type;
 

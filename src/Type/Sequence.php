@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI\Type;
 
-use Innmind\OpenAPI\Schema;
+use Innmind\OpenAPI\{
+    Schema,
+    Type,
+};
 use Innmind\Immutable\{
     Sequence as Seq,
     Map,
@@ -14,16 +17,16 @@ use Innmind\Immutable\{
  *
  * @psalm-immutable
  */
-final class Sequence
+final class Sequence implements Type
 {
-    private Schema|self|Shape|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $items;
+    private Schema|Type $items;
     private ?string $title;
     private ?string $description;
     private ?array $example;
     private bool $nullable;
 
     private function __construct(
-        Schema|self|Shape|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $items,
+        Schema|Type $items,
         ?string $title,
         ?string $description,
         ?array $example,
@@ -40,7 +43,7 @@ final class Sequence
      * @psalm-pure
      */
     public static function of(
-        Schema|self|Shape|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $items,
+        Schema|Type $items,
         string $title = null,
         string $description = null,
     ): self {
