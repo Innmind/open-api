@@ -27,6 +27,11 @@ final class Nullable implements Type
         return new self($type);
     }
 
+    public function nullable(): self
+    {
+        return $this;
+    }
+
     public function toArray(): array
     {
         $type = $this->type->toArray();

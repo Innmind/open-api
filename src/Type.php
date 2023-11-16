@@ -10,6 +10,11 @@ namespace Innmind\OpenAPI;
 interface Type
 {
     /**
+     * @return Type<?T>
+     */
+    public function nullable(): self;
+
+    /**
      * @psalm-mutation-free
      */
     public function toArray(): array;
