@@ -10,6 +10,7 @@ use Innmind\OpenAPI\{
     Type\Shape,
     Type\Str,
     Type\Password,
+    Parameter,
 };
 use Innmind\Http\Response\StatusCode;
 use Innmind\UrlTemplate\Template;
@@ -33,6 +34,9 @@ return static function() {
             Set\Strings::any(),
             Url::any(),
             Set\Strings::any(),
+            Set\Strings::any(),
+            Set\Strings::any(),
+            Set\Strings::atLeast(1),
         ),
         static function(
             $assert,
@@ -41,6 +45,9 @@ return static function() {
             $description,
             $server,
             $serverDescription,
+            $operationSummary,
+            $operationDescription,
+            $operationId,
         ) {
             $document = OpenAPI::v3
                 ->info($title, $version, $description)
@@ -51,16 +58,15 @@ return static function() {
                 ->schemas(Schemas::login)
                 ->paths(Sequence::of(
                     Path::of(
-                        Template::of('/api/login'),
-                        Operation::post()
+                        Template::of('/api/login/{username}'),
+                        Operation::post($operationSummary, $operationDescription, $operationId)
                             ->tags(Tags::foo)
                             ->disableSecurity()
+                            ->parameters(Parameter::path('username')->require())
                             ->requests(Request::of(
                                 MediaType::of('application/json'),
                                 Shape::of()
-                                    ->property('username', Str::of())
                                     ->property('password', Password::of())
-                                    ->require('username')
                                     ->require('password'),
                             ))
                             ->responses(
@@ -93,20 +99,27 @@ return static function() {
                         ['name' => 'bar'],
                     ],
                     'paths' => [
-                        '/api/login' => [
+                        '/api/login/{username}' => [
                             'post' => [
+                                'summary' => $operationSummary,
+                                'description' => $operationDescription,
+                                'operationId' => $operationId,
                                 'tags' => ['foo'],
                                 'security' => [],
+                                'parameters' => [
+                                    [
+                                        'in' => 'path',
+                                        'name' => 'username',
+                                        'required' => true,
+                                    ],
+                                ],
                                 'requestBody' => [
                                     'required' => true,
                                     'content' => [
                                         'application/json' => [
                                             'type' => 'object',
-                                            'required' => ['username', 'password'],
+                                            'required' => ['password'],
                                             'properties' => [
-                                                'username' => [
-                                                    'type' => 'string',
-                                                ],
                                                 'password' => [
                                                     'type' => 'string',
                                                     'format' => 'password',
