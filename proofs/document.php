@@ -78,6 +78,13 @@ return static function() {
                                     Responses::apiUnavailable,
                                 ),
                             ),
+                        Operation::get(),
+                        Operation::put(),
+                        Operation::delete(),
+                        Operation::options(),
+                        Operation::patch(),
+                        Operation::head(),
+                        Operation::trace(),
                     ),
                 ))
                 ->toArray();
@@ -143,6 +150,13 @@ return static function() {
                                     ],
                                 ],
                             ],
+                            'get' => [],
+                            'put' => [],
+                            'delete' => [],
+                            'options' => [],
+                            'patch' => [],
+                            'head' => [],
+                            'trace' => [],
                         ],
                     ],
                     'components' => [
