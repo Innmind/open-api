@@ -17,20 +17,17 @@ final class Str implements Type
     private ?string $title;
     private ?string $description;
     private ?string $example;
-    private bool $nullable;
     private ?RegExp $pattern;
 
     private function __construct(
         ?string $title,
         ?string $description,
         ?string $example,
-        bool $nullable,
         ?RegExp $pattern,
     ) {
         $this->title = $title;
         $this->description = $description;
         $this->example = $example;
-        $this->nullable = $nullable;
         $this->pattern = $pattern;
     }
 
@@ -43,7 +40,6 @@ final class Str implements Type
             $title,
             $description,
             null,
-            false,
             null,
         );
     }
@@ -54,20 +50,13 @@ final class Str implements Type
             $this->title,
             $this->description,
             $example,
-            $this->nullable,
             $this->pattern,
         );
     }
 
-    public function nullable(): self
+    public function nullable(): Nullable
     {
-        return new self(
-            $this->title,
-            $this->description,
-            $this->example,
-            true,
-            $this->pattern,
-        );
+        return Nullable::of($this);
     }
 
     public function restrictVia(RegExp $pattern): self
@@ -76,7 +65,6 @@ final class Str implements Type
             $this->title,
             $this->description,
             $this->example,
-            $this->nullable,
             $pattern,
         );
     }
@@ -95,10 +83,6 @@ final class Str implements Type
 
         if (\is_string($this->example)) {
             $type['example'] = $this->example;
-        }
-
-        if ($this->nullable) {
-            $type['nullable'] = $this->nullable;
         }
 
         if ($this->pattern) {

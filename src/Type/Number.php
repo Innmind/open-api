@@ -13,18 +13,15 @@ final class Number implements Type
     private ?string $title;
     private ?string $description;
     private ?float $example;
-    private bool $nullable;
 
     private function __construct(
         ?string $title,
         ?string $description,
         ?float $example,
-        bool $nullable,
     ) {
         $this->title = $title;
         $this->description = $description;
         $this->example = $example;
-        $this->nullable = $nullable;
     }
 
     /**
@@ -36,7 +33,6 @@ final class Number implements Type
             $title,
             $description,
             null,
-            false,
         );
     }
 
@@ -46,18 +42,12 @@ final class Number implements Type
             $this->title,
             $this->description,
             $example,
-            $this->nullable,
         );
     }
 
-    public function nullable(): self
+    public function nullable(): Nullable
     {
-        return new self(
-            $this->title,
-            $this->description,
-            $this->example,
-            true,
-        );
+        return Nullable::of($this);
     }
 
     public function toArray(): array
@@ -74,10 +64,6 @@ final class Number implements Type
 
         if (\is_float($this->example)) {
             $type['example'] = $this->example;
-        }
-
-        if ($this->nullable) {
-            $type['nullable'] = $this->nullable;
         }
 
         return $type;

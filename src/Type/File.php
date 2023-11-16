@@ -28,9 +28,9 @@ final class File implements Type
         ));
     }
 
-    public function nullable(): self
+    public function nullable(): Nullable
     {
-        return new self($this->type->nullable());
+        return Nullable::of($this);
     }
 
     public function toArray(): array

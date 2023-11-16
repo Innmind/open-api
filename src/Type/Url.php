@@ -33,9 +33,9 @@ final class Url implements Type
         return new self($this->type->example($example));
     }
 
-    public function nullable(): self
+    public function nullable(): Nullable
     {
-        return new self($this->type->nullable());
+        return Nullable::of($this);
     }
 
     public function toArray(): array

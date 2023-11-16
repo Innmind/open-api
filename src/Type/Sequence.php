@@ -23,20 +23,17 @@ final class Sequence implements Type
     private ?string $title;
     private ?string $description;
     private ?array $example;
-    private bool $nullable;
 
     private function __construct(
         Schema|Type $items,
         ?string $title,
         ?string $description,
         ?array $example,
-        bool $nullable,
     ) {
         $this->items = $items;
         $this->title = $title;
         $this->description = $description;
         $this->example = $example;
-        $this->nullable = $nullable;
     }
 
     /**
@@ -52,7 +49,6 @@ final class Sequence implements Type
             $title,
             $description,
             null,
-            false,
         );
     }
 
@@ -63,19 +59,12 @@ final class Sequence implements Type
             $this->title,
             $this->description,
             $example,
-            $this->nullable,
         );
     }
 
-    public function nullable(): self
+    public function nullable(): Nullable
     {
-        return new self(
-            $this->items,
-            $this->title,
-            $this->description,
-            $this->example,
-            true,
-        );
+        return Nullable::of($this);
     }
 
     public function toArray(): array
@@ -100,10 +89,6 @@ final class Sequence implements Type
 
         if (\is_array($this->example)) {
             $type['example'] = $this->example;
-        }
-
-        if ($this->nullable) {
-            $type['nullable'] = $this->nullable;
         }
 
         return $type;

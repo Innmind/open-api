@@ -26,7 +26,6 @@ final class Shape implements Type
     /** @var Map<non-empty-string, Schema|Type> */
     private Map $properties;
     private ?array $example;
-    private bool $nullable;
 
     /**
      * @param Seq<non-empty-string> $required
@@ -38,14 +37,12 @@ final class Shape implements Type
         Seq $required,
         Map $properties,
         ?array $example,
-        bool $nullable,
     ) {
         $this->title = $title;
         $this->description = $description;
         $this->required = $required;
         $this->properties = $properties;
         $this->example = $example;
-        $this->nullable = $nullable;
     }
 
     /**
@@ -59,7 +56,6 @@ final class Shape implements Type
             Seq::of(),
             Map::of(),
             null,
-            false,
         );
     }
 
@@ -74,7 +70,6 @@ final class Shape implements Type
             $this->required,
             ($this->properties)($name, $schema),
             $this->example,
-            $this->nullable,
         );
     }
 
@@ -89,7 +84,6 @@ final class Shape implements Type
             ($this->required)($name),
             $this->properties,
             $this->example,
-            $this->nullable,
         );
     }
 
@@ -101,20 +95,12 @@ final class Shape implements Type
             $this->required,
             $this->properties,
             $example,
-            $this->nullable,
         );
     }
 
-    public function nullable(): self
+    public function nullable(): Nullable
     {
-        return new self(
-            $this->title,
-            $this->description,
-            $this->required,
-            $this->properties,
-            $this->example,
-            true,
-        );
+        return Nullable::of($this);
     }
 
     public function toArray(): array
@@ -150,10 +136,6 @@ final class Shape implements Type
 
         if (\is_array($this->example)) {
             $type['example'] = $this->example;
-        }
-
-        if ($this->nullable) {
-            $type['nullable'] = $this->nullable;
         }
 
         return $type;
