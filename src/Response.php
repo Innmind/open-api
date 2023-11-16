@@ -47,8 +47,8 @@ final class Response
 
     public function sends(
         MediaType $mediaType,
-        Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $content,
-        ?string $description,
+        Schema|Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $content,
+        string $description = null,
     ): self {
         return new self(
             $this->statusCode,
@@ -65,16 +65,19 @@ final class Response
         return new self($this->statusCode, $reference);
     }
 
+    public function statusCode(): StatusCode
+    {
+        return $this->statusCode;
+    }
+
     public function toArray(): array
     {
-        $response = match (true) {
+        return match (true) {
             \is_null($this->description) => [],
             $this->description instanceof Reference => [
                 '$ref' => "#/components/responses/{$this->description->name()}",
             ],
             default => $this->description->toArray(),
         };
-
-        return [$this->statusCode->toInt() => $response];
     }
 }

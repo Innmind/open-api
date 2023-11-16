@@ -218,7 +218,7 @@ final class Document
      *     },
      *     servers?: list<array{url: string, description?: string}>,
      *     tags?: list<array{name: non-empty-string, description?: string}>,
-     *     paths?: array<non-empty-string, array>,
+     *     paths: array<non-empty-string, array>,
      *     components?: array{
      *         securitySchemes?: array<non-empty-string, array>,
      *         responses?: array<non-empty-string, array>,
@@ -260,6 +260,13 @@ final class Document
                 ->toList();
         }
 
+        $document['paths'] = \array_merge(
+            ...$this
+                ->paths
+                ->map(static fn($path) => $path->toArray())
+                ->toList(),
+        );
+
         if (!$this->securitySchemes->empty()) {
             $document['components'] = [];
             $document['components']['securitySchemes'] = \array_merge(
@@ -288,7 +295,7 @@ final class Document
             );
         }
 
-        if (!$this->responses->empty()) {
+        if (!$this->schemas->empty()) {
             $document['components'] ??= [];
             $document['components']['schemas'] = \array_merge(
                 ...$this

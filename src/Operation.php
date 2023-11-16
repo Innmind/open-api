@@ -372,22 +372,26 @@ final class Operation
         }
 
         if (!$this->requests->empty()) {
-            $operation['requestBody'] = \array_merge(
+            $operation['requestBody'] = ['required' => true];
+            $operation['requestBody']['content'] = \array_merge(
                 ...$this
                     ->requests
                     ->map(static fn($request) => $request->toArray())
                     ->toList(),
             );
-            $operation['requestBody']['required'] = true;
         }
 
         if (!$this->responses->empty()) {
-            $operation['responses'] = \array_merge(
-                ...$this
-                    ->responses
-                    ->map(static fn($response) => $response->toArray())
-                    ->toList(),
-            );
+            $operation['responses'] = $this
+                ->responses
+                ->reduce(
+                    [],
+                    static function(array $responses, $response) {
+                        $responses[(string) $response->statusCode()->toInt()] = $response->toArray();
+
+                        return $responses;
+                    },
+                );
         }
 
         return [$this->method->name => $operation];

@@ -130,7 +130,7 @@ final class Shape
                         $type instanceof Schema => [$name => [
                             '$ref' => "#/components/schemas/{$type->name()}",
                         ]],
-                        default => [$name, $type->toArray()],
+                        default => [$name => $type->toArray()],
                     })
                     ->values()
                     ->toList(),

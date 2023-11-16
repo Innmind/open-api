@@ -3,18 +3,19 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI\Response;
 
-use Innmind\OpenAPI\Type\{
-    Shape,
-    Sequence,
-    Str,
-    Uuid,
-    Password,
-    Url,
-    Date,
-    DateTime,
-    File,
-    Integer,
-    Number,
+use Innmind\OpenAPI\{
+    Schema,
+    Type\Shape,
+    Type\Sequence,
+    Type\Str,
+    Type\Uuid,
+    Type\Password,
+    Type\Url,
+    Type\Date,
+    Type\DateTime,
+    Type\File,
+    Type\Integer,
+    Type\Number,
 };
 use Innmind\MediaType\MediaType;
 use Innmind\Immutable\Map;
@@ -22,7 +23,7 @@ use Innmind\Immutable\Map;
 final class Definition
 {
     private MediaType $mediaType;
-    private Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema;
+    private Schema|Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema;
     private ?string $description;
     /** @var Map<non-empty-string, Str> */
     private Map $headers;
@@ -34,7 +35,7 @@ final class Definition
      */
     private function __construct(
         MediaType $mediaType,
-        Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema,
+        Schema|Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema,
         ?string $description,
         Map $headers,
     ) {
@@ -49,7 +50,7 @@ final class Definition
      */
     public static function of(
         MediaType $mediaType,
-        Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema,
+        Schema|Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema,
         ?string $description,
     ): self {
         return new self($mediaType, $schema, $description, Map::of());
@@ -75,7 +76,12 @@ final class Definition
         $response = [
             'content' => [
                 $this->mediaType->toString() => [
-                    'schema' => $this->schema->toArray(),
+                    'schema' => match (true) {
+                        $this->schema instanceof Schema => [
+                            '$ref' => "#/components/schemas/{$this->schema->name()}",
+                        ],
+                        default => $this->schema->toArray(),
+                    },
                 ],
             ],
         ];

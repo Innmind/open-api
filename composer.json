@@ -28,6 +28,11 @@
             "Innmind\\OpenAPI\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Fixtures\\Innmind\\OpenAPI\\": "fixtures/"
+        }
+    },
     "require-dev": {
         "vimeo/psalm": "~5.0",
         "innmind/black-box": "~5.0",

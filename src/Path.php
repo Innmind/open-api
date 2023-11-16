@@ -59,6 +59,9 @@ final class Path
         );
     }
 
+    /**
+     * @return array<non-empty-string, array>
+     */
     public function toArray(): array
     {
         $description = \array_merge(
@@ -75,6 +78,7 @@ final class Path
                 ->toList();
         }
 
+        /** @var array<non-empty-string, array> */
         return [$this->template->toString() => $description];
     }
 }
