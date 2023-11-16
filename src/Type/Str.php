@@ -11,6 +11,7 @@ use Innmind\Immutable\{
 
 /**
  * @psalm-immutable
+ * @implements Type<string>
  */
 final class Str implements Type
 {

@@ -4,9 +4,11 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
+use Innmind\Url\Url as Model;
 
 /**
  * @psalm-immutable
+ * @implements Type<Model>
  */
 final class Url implements Type
 {

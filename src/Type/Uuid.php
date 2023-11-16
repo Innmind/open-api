@@ -7,6 +7,7 @@ use Innmind\OpenAPI\Type;
 
 /**
  * @psalm-immutable
+ * @implements Type<string>
  */
 final class Uuid implements Type
 {

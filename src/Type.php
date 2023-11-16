@@ -5,6 +5,7 @@ namespace Innmind\OpenAPI;
 
 /**
  * @internal
+ * @template T
  */
 interface Type
 {

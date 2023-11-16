@@ -16,14 +16,20 @@ use Innmind\Immutable\{
  * This represents an array (but named sequence as array is a reserved keyword)
  *
  * @psalm-immutable
+ * @template T
+ * @implements Type<list<T>>
  */
 final class Sequence implements Type
 {
+    /** @var Schema|Type<T> */
     private Schema|Type $items;
     private ?string $title;
     private ?string $description;
     private ?array $example;
 
+    /**
+     * @param Schema|Type<T> $items
+     */
     private function __construct(
         Schema|Type $items,
         ?string $title,
@@ -38,6 +44,11 @@ final class Sequence implements Type
 
     /**
      * @psalm-pure
+     * @template A
+     *
+     * @param Schema|Type<A> $items
+     *
+     * @return self<A>
      */
     public static function of(
         Schema|Type $items,

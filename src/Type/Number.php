@@ -7,6 +7,7 @@ use Innmind\OpenAPI\Type;
 
 /**
  * @psalm-immutable
+ * @implements Type<float>
  */
 final class Number implements Type
 {

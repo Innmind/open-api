@@ -7,6 +7,8 @@ use Innmind\OpenAPI\Type;
 
 /**
  * @psalm-immutable
+ * @template T
+ * @implements Type<?T>
  */
 final class Nullable implements Type
 {

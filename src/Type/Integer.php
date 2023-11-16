@@ -7,6 +7,7 @@ use Innmind\OpenAPI\Type;
 
 /**
  * @psalm-immutable
+ * @implements Type<int>
  */
 final class Integer implements Type
 {

@@ -16,6 +16,7 @@ use Innmind\Immutable\{
  * This represents an object (but named shape as object is a reserved keyword)
  *
  * @psalm-immutable
+ * @implements Type<array<non-empty-string, mixed>>
  */
 final class Shape implements Type
 {

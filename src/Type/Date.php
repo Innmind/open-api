@@ -4,9 +4,11 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
+use Innmind\TimeContinuum\PointInTime;
 
 /**
  * @psalm-immutable
+ * @implements Type<PointInTime>
  */
 final class Date implements Type
 {
