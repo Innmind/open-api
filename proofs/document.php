@@ -70,10 +70,12 @@ return static function() {
                                     ->require('password'),
                             ))
                             ->responses(
-                                Response::of(StatusCode::ok)->sends(
-                                    MediaType::of('application/json'),
-                                    Schemas::login,
-                                ),
+                                Response::of(StatusCode::ok)
+                                    ->sends(
+                                        MediaType::of('application/json'),
+                                        Schemas::login,
+                                    )
+                                    ->withHeader('x-logged-in', Str::of('some title')),
                                 Response::of(StatusCode::serviceUnavailable)->references(
                                     Responses::apiUnavailable,
                                 ),
@@ -141,6 +143,14 @@ return static function() {
                                             'application/json' => [
                                                 'schema' => [
                                                     '$ref' => '#/components/schemas/login',
+                                                ],
+                                            ],
+                                        ],
+                                        'headers' => [
+                                            'x-logged-in' => [
+                                                'schema' => [
+                                                    'type' => 'string',
+                                                    'title' => 'some title',
                                                 ],
                                             ],
                                         ],

@@ -45,6 +45,9 @@ final class Response
         return new self($statusCode, null);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function sends(
         MediaType $mediaType,
         Schema|Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $content,
@@ -60,6 +63,25 @@ final class Response
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     *
+     * @param non-empty-string $name
+     */
+    public function withHeader(string $name, Str $schema): self
+    {
+        return match (true) {
+            $this->description instanceof Definition => new self(
+                $this->statusCode,
+                $this->description->withHeader($name, $schema),
+            ),
+            default => $this,
+        };
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
     public function references(Reference $reference): self
     {
         return new self($this->statusCode, $reference);
