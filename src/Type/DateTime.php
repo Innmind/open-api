@@ -5,6 +5,7 @@ namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
 use Innmind\TimeContinuum\PointInTime;
+use Innmind\Validation\Constraint;
 
 /**
  * @psalm-immutable
@@ -38,6 +39,12 @@ final class DateTime implements Type
     public function nullable(): Nullable
     {
         return Nullable::of($this);
+    }
+
+    public function constraint(): Constraint
+    {
+        // TODO add type transformation
+        return $this->type->constraint();
     }
 
     public function toArray(): array

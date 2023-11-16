@@ -4,6 +4,10 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
+use Innmind\Validation\{
+    Constraint,
+    Is,
+};
 use Innmind\Immutable\{
     RegExp,
     Str as S,
@@ -68,6 +72,11 @@ final class Str implements Type
             $this->example,
             $pattern,
         );
+    }
+
+    public function constraint(): Constraint
+    {
+        return Is::string();
     }
 
     public function toArray(): array

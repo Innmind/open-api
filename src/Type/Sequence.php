@@ -7,6 +7,11 @@ use Innmind\OpenAPI\{
     Schema,
     Type,
 };
+use Innmind\Validation\{
+    Constraint,
+    Is,
+    Each,
+};
 use Innmind\Immutable\{
     Sequence as Seq,
     Map,
@@ -76,6 +81,16 @@ final class Sequence implements Type
     public function nullable(): Nullable
     {
         return Nullable::of($this);
+    }
+
+    public function constraint(): Constraint
+    {
+        return Is::array()
+            ->and(Is::list())
+            ->and(Each::of(match (true) {
+                $this->items instanceof Schema => $this->items->type()->constraint(),
+                default => $this->items->constraint(),
+            }));
     }
 
     public function toArray(): array

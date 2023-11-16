@@ -7,6 +7,11 @@ use Innmind\OpenAPI\{
     Schema,
     Type,
 };
+use Innmind\Validation\{
+    Constraint,
+    Shape as VShape,
+    Is,
+};
 use Innmind\Immutable\{
     Sequence as Seq,
     Map,
@@ -104,6 +109,23 @@ final class Shape implements Type
         return Nullable::of($this);
     }
 
+    public function constraint(): Constraint
+    {
+        return $this
+            ->properties
+            ->find(static fn() => true)
+            ->match(
+                fn($pair) => $this->properties->reduce(
+                    VShape::of($pair->key(), $this->keyConstraint($pair->key(), $pair->value())),
+                    fn(VShape $shape, $name, $type) => $shape->with(
+                        $name,
+                        $this->keyConstraint($name, $type),
+                    ),
+                ),
+                static fn() => Is::array(),
+            );
+    }
+
     public function toArray(): array
     {
         $type = ['type' => 'object'];
@@ -140,5 +162,18 @@ final class Shape implements Type
         }
 
         return $type;
+    }
+
+    /**
+     * @param non-empty-string $name
+     */
+    private function keyConstraint(string $name, Schema|Type $type): Constraint
+    {
+        if ($type instanceof Schema) {
+            $type = $type->type();
+        }
+
+        // TODO add optional constraint
+        return $type->constraint();
     }
 }

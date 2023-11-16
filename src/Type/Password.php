@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
+use Innmind\Validation\Constraint;
 
 /**
  * @psalm-immutable
@@ -37,6 +38,11 @@ final class Password implements Type
     public function nullable(): Nullable
     {
         return Nullable::of($this);
+    }
+
+    public function constraint(): Constraint
+    {
+        return $this->type->constraint();
     }
 
     public function toArray(): array

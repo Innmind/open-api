@@ -4,6 +4,10 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
+use Innmind\Validation\{
+    Constraint,
+    Is,
+};
 
 /**
  * @psalm-immutable
@@ -30,6 +34,11 @@ final class Nullable implements Type
     public function nullable(): self
     {
         return $this;
+    }
+
+    public function constraint(): Constraint
+    {
+        return $this->type->constraint()->or(Is::null());
     }
 
     public function toArray(): array

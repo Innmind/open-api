@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
+use Innmind\Validation\Constraint;
 use Innmind\Url\Url as Model;
 
 /**
@@ -38,6 +39,12 @@ final class Url implements Type
     public function nullable(): Nullable
     {
         return Nullable::of($this);
+    }
+
+    public function constraint(): Constraint
+    {
+        // TODO add the type transformation
+        return $this->type->constraint();
     }
 
     public function toArray(): array
