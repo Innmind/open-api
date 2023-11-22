@@ -70,6 +70,11 @@ final class Str implements Type
         return Map::of($this, $map);
     }
 
+    public function constrain(Constraint $constraint): Type
+    {
+        return Constrain::of($this, $constraint);
+    }
+
     public function restrictVia(RegExp $pattern): self
     {
         return new self(

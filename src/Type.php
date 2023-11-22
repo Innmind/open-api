@@ -29,6 +29,15 @@ interface Type
     public function map(callable $map): self;
 
     /**
+     * @template U
+     *
+     * @param Constraint<T, U> $constraint
+     *
+     * @return self<U>
+     */
+    public function constrain(Constraint $constraint): self;
+
+    /**
      * @psalm-mutation-free
      *
      * @return Constraint<mixed, T>

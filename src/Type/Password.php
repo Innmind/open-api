@@ -46,6 +46,11 @@ final class Password implements Type
         return Map::of($this, $map);
     }
 
+    public function constrain(Constraint $constraint): Type
+    {
+        return Constrain::of($this, $constraint);
+    }
+
     public function constraint(Clock $clock): Constraint
     {
         return $this->type->constraint($clock);

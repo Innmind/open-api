@@ -14,21 +14,21 @@ use Innmind\Validation\Constraint;
  * @template U
  * @implements Type<U>
  */
-final class Map implements Type
+final class Constrain implements Type
 {
     /** @var Type<T> */
     private Type $type;
-    /** @var callable(T): U */
-    private $map;
+    /** @var Constraint<T, U> */
+    private Constraint $constraint;
 
     /**
      * @param Type<T> $type
-     * @param callable(T): U $map
+     * @param Constraint<T, U> $constraint
      */
-    private function __construct(Type $type, callable $map)
+    private function __construct(Type $type, Constraint $constraint)
     {
         $this->type = $type;
-        $this->map = $map;
+        $this->constraint = $constraint;
     }
 
     /**
@@ -37,13 +37,13 @@ final class Map implements Type
      * @psalm-pure
      *
      * @param Type<A> $type
-     * @param callable(A): B $map
+     * @param Constraint<A, B> $constraint
      *
      * @return self<A, B>
      */
-    public static function of(Type $type, callable $map): self
+    public static function of(Type $type, Constraint $constraint): self
     {
-        return new self($type, $map);
+        return new self($type, $constraint);
     }
 
     public function nullable(): Type
@@ -51,23 +51,22 @@ final class Map implements Type
         return Nullable::of($this);
     }
 
-    public function map(callable $map): self
+    public function map(callable $map): Type
     {
-        return new self($this, $map);
+        return Map::of($this, $map);
     }
 
-    public function constrain(Constraint $constraint): Type
+    public function constrain(Constraint $constraint): self
     {
-        return Constrain::of($this, $constraint);
+        return new self($this, $constraint);
     }
 
     public function constraint(Clock $clock): Constraint
     {
-        /** @psalm-suppress ArgumentTypeCoercion Don't know why it loses the type */
         return $this
             ->type
             ->constraint($clock)
-            ->map($this->map);
+            ->and($this->constraint);
     }
 
     public function toArray(): array
