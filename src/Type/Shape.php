@@ -15,7 +15,7 @@ use Innmind\Validation\{
 };
 use Innmind\Immutable\{
     Sequence as Seq,
-    Map,
+    Map as IMap,
 };
 
 /**
@@ -30,19 +30,19 @@ final class Shape implements Type
     private ?string $description;
     /** @var Seq<non-empty-string> */
     private Seq $required;
-    /** @var Map<non-empty-string, Schema|Type> */
-    private Map $properties;
+    /** @var IMap<non-empty-string, Schema|Type> */
+    private IMap $properties;
     private ?array $example;
 
     /**
      * @param Seq<non-empty-string> $required
-     * @param Map<non-empty-string, Schema|Type> $properties
+     * @param IMap<non-empty-string, Schema|Type> $properties
      */
     private function __construct(
         ?string $title,
         ?string $description,
         Seq $required,
-        Map $properties,
+        IMap $properties,
         ?array $example,
     ) {
         $this->title = $title;
@@ -61,7 +61,7 @@ final class Shape implements Type
             $title,
             $description,
             Seq::of(),
-            Map::of(),
+            IMap::of(),
             null,
         );
     }
@@ -108,6 +108,11 @@ final class Shape implements Type
     public function nullable(): Nullable
     {
         return Nullable::of($this);
+    }
+
+    public function map(callable $map): Type
+    {
+        return Map::of($this, $map);
     }
 
     public function constraint(Clock $clock): Constraint

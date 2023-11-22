@@ -13,10 +13,6 @@ use Innmind\Validation\{
     Is,
     Each,
 };
-use Innmind\Immutable\{
-    Sequence as Seq,
-    Map,
-};
 
 /**
  * This represents an array (but named sequence as array is a reserved keyword)
@@ -82,6 +78,11 @@ final class Sequence implements Type
     public function nullable(): Nullable
     {
         return Nullable::of($this);
+    }
+
+    public function map(callable $map): Type
+    {
+        return Map::of($this, $map);
     }
 
     public function constraint(Clock $clock): Constraint

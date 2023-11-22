@@ -20,6 +20,15 @@ interface Type
     public function nullable(): self;
 
     /**
+     * @template U
+     *
+     * @param callable(T): U $map
+     *
+     * @return self<U>
+     */
+    public function map(callable $map): self;
+
+    /**
      * @psalm-mutation-free
      *
      * @return Constraint<mixed, T>

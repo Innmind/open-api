@@ -65,6 +65,11 @@ final class Str implements Type
         return Nullable::of($this);
     }
 
+    public function map(callable $map): Type
+    {
+        return Map::of($this, $map);
+    }
+
     public function restrictVia(RegExp $pattern): self
     {
         return new self(

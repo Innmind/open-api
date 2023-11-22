@@ -36,6 +36,11 @@ final class File implements Type
         return Nullable::of($this);
     }
 
+    public function map(callable $map): Type
+    {
+        return Map::of($this, $map);
+    }
+
     public function constraint(Clock $clock): Constraint
     {
         return $this->type->constraint($clock);
