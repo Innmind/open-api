@@ -7,6 +7,7 @@ use Innmind\OpenAPI\{
     Schema,
     Type,
 };
+use Innmind\TimeContinuum\Clock;
 use Innmind\Validation\{
     Constraint,
     Shape as VShape,
@@ -109,17 +110,24 @@ final class Shape implements Type
         return Nullable::of($this);
     }
 
-    public function constraint(): Constraint
+    public function constraint(Clock $clock): Constraint
     {
         $constraint = $this
             ->properties
             ->find(static fn() => true)
             ->match(
                 fn($pair) => $this->properties->reduce(
-                    VShape::of($pair->key(), $this->keyConstraint($pair->key(), $pair->value())),
+                    VShape::of(
+                        $pair->key(),
+                        $this->keyConstraint(
+                            $clock,
+                            $pair->key(),
+                            $pair->value(),
+                        ),
+                    ),
                     fn(VShape $shape, $name, $type) => $shape->with(
                         $name,
-                        $this->keyConstraint($name, $type),
+                        $this->keyConstraint($clock, $name, $type),
                     ),
                 ),
                 static fn() => Is::array(),
@@ -177,13 +185,15 @@ final class Shape implements Type
     /**
      * @param non-empty-string $name
      */
-    private function keyConstraint(string $name, Schema|Type $type): Constraint
-    {
+    private function keyConstraint(
+        Clock $clock,
+        string $name,
+        Schema|Type $type,
+    ): Constraint {
         if ($type instanceof Schema) {
             $type = $type->type();
         }
 
-        // TODO add optional constraint
-        return $type->constraint();
+        return $type->constraint($clock);
     }
 }

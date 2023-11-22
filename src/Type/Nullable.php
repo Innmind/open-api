@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
+use Innmind\TimeContinuum\Clock;
 use Innmind\Validation\{
     Constraint,
     Is,
@@ -36,9 +37,9 @@ final class Nullable implements Type
         return $this;
     }
 
-    public function constraint(): Constraint
+    public function constraint(Clock $clock): Constraint
     {
-        return $this->type->constraint()->or(Is::null());
+        return $this->type->constraint($clock)->or(Is::null());
     }
 
     public function toArray(): array

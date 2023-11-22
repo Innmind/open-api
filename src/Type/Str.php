@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
+use Innmind\TimeContinuum\Clock;
 use Innmind\Validation\{
     Constraint,
     Is,
@@ -74,7 +75,7 @@ final class Str implements Type
         );
     }
 
-    public function constraint(): Constraint
+    public function constraint(Clock $clock): Constraint
     {
         return Is::string();
     }

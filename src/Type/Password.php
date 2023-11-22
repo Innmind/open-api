@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
+use Innmind\TimeContinuum\Clock;
 use Innmind\Validation\Constraint;
 
 /**
@@ -40,9 +41,9 @@ final class Password implements Type
         return Nullable::of($this);
     }
 
-    public function constraint(): Constraint
+    public function constraint(Clock $clock): Constraint
     {
-        return $this->type->constraint();
+        return $this->type->constraint($clock);
     }
 
     public function toArray(): array

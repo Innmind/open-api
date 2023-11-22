@@ -4,8 +4,16 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
-use Innmind\TimeContinuum\PointInTime;
-use Innmind\Validation\Constraint;
+use Innmind\TimeContinuum\{
+    Clock,
+    PointInTime,
+};
+use Innmind\Validation\{
+    Constraint,
+    Failure,
+    Of,
+};
+use Innmind\Immutable\Validation;
 
 /**
  * @psalm-immutable
@@ -41,10 +49,16 @@ final class Date implements Type
         return Nullable::of($this);
     }
 
-    public function constraint(): Constraint
+    public function constraint(Clock $clock): Constraint
     {
-        // TODO add type transformation
-        return $this->type->constraint();
+        return $this->type->constraint($clock)->and(Of::callable(
+            static fn(string $string) => $clock
+                ->at($string, new Date\Format)
+                ->match(
+                    static fn($point) => Validation::success($point),
+                    static fn() => Validation::fail(Failure::of('String is not a valid date')),
+                ),
+        ));
     }
 
     public function toArray(): array

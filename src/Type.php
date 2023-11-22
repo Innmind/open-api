@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI;
 
+use Innmind\TimeContinuum\Clock;
 use Innmind\Validation\Constraint;
 
 /**
@@ -23,7 +24,7 @@ interface Type
      *
      * @return Constraint<mixed, T>
      */
-    public function constraint(): Constraint;
+    public function constraint(Clock $clock): Constraint;
 
     /**
      * @psalm-mutation-free

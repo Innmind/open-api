@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
+use Innmind\TimeContinuum\Clock;
 use Innmind\Validation\{
     Constraint,
     Failure,
@@ -46,9 +47,9 @@ final class Uuid implements Type
         return Nullable::of($this);
     }
 
-    public function constraint(): Constraint
+    public function constraint(Clock $clock): Constraint
     {
-        return $this->type->constraint()->and(Of::callable(
+        return $this->type->constraint($clock)->and(Of::callable(
             static fn(string $string) => match (RUuid::isValid($string)) {
                 true => Validation::success($string),
                 false => Validation::fail(Failure::of('String is not a valid uuid')),

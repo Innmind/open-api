@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
+use Innmind\TimeContinuum\Clock;
 use Innmind\Validation\{
     Constraint,
     Is,
@@ -55,7 +56,7 @@ final class Number implements Type
         return Nullable::of($this);
     }
 
-    public function constraint(): Constraint
+    public function constraint(Clock $clock): Constraint
     {
         return Is::float();
     }

@@ -7,6 +7,7 @@ use Innmind\OpenAPI\{
     Schema,
     Type,
 };
+use Innmind\TimeContinuum\Clock;
 use Innmind\Validation\{
     Constraint,
     Is,
@@ -83,13 +84,13 @@ final class Sequence implements Type
         return Nullable::of($this);
     }
 
-    public function constraint(): Constraint
+    public function constraint(Clock $clock): Constraint
     {
         return Is::array()
             ->and(Is::list())
             ->and(Each::of(match (true) {
-                $this->items instanceof Schema => $this->items->type()->constraint(),
-                default => $this->items->constraint(),
+                $this->items instanceof Schema => $this->items->type()->constraint($clock),
+                default => $this->items->constraint($clock),
             }));
     }
 
