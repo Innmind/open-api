@@ -111,7 +111,7 @@ final class Shape implements Type
 
     public function constraint(): Constraint
     {
-        return $this
+        $constraint = $this
             ->properties
             ->find(static fn() => true)
             ->match(
@@ -123,6 +123,16 @@ final class Shape implements Type
                     ),
                 ),
                 static fn() => Is::array(),
+            );
+
+        /** @psalm-suppress InvalidArgument */
+        return $this
+            ->properties
+            ->keys()
+            ->exclude(fn($key) => $this->required->contains($key))
+            ->reduce(
+                $constraint,
+                static fn(VShape $constraint, $key) => $constraint->optional($key),
             );
     }
 
