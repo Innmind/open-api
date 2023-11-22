@@ -17,15 +17,24 @@ use Innmind\Validation\{
  */
 final class Nullable implements Type
 {
+    /** @var Type<T> */
     private Type $type;
 
+    /**
+     * @param Type<T> $type
+     */
     private function __construct(Type $type)
     {
         $this->type = $type;
     }
 
     /**
+     * @template A
      * @psalm-pure
+     *
+     * @param Type<A> $type
+     *
+     * @return self<A>
      */
     public static function of(Type $type): self
     {
