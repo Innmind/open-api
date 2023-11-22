@@ -9,6 +9,7 @@ use Innmind\Validation\Constraint;
 /**
  * @internal
  * @template T
+ * @psalm-immutable
  */
 interface Type
 {
