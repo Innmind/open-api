@@ -4,8 +4,13 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
-use Innmind\Validation\Constraint;
+use Innmind\Validation\{
+    Constraint,
+    Failure,
+    Of,
+};
 use Innmind\Url\Url as Model;
+use Innmind\Immutable\Validation;
 
 /**
  * @psalm-immutable
@@ -43,8 +48,12 @@ final class Url implements Type
 
     public function constraint(): Constraint
     {
-        // TODO add the type transformation
-        return $this->type->constraint();
+        return $this->type->constraint()->and(Of::callable(
+            static fn(string $string) => Model::maybe($string)->match(
+                static fn($url) => Validation::success($url),
+                static fn() => Validation::fail(Failure::of('String is not a valid url')),
+            ),
+        ));
     }
 
     public function toArray(): array
