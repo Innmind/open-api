@@ -4,7 +4,13 @@ declare(strict_types = 1);
 namespace Innmind\OpenAPI\Type;
 
 use Innmind\OpenAPI\Type;
-use Innmind\Validation\Constraint;
+use Innmind\Validation\{
+    Constraint,
+    Failure,
+    Of,
+};
+use Innmind\Immutable\Validation;
+use Ramsey\Uuid\Uuid as RUuid;
 
 /**
  * @psalm-immutable
@@ -42,7 +48,12 @@ final class Uuid implements Type
 
     public function constraint(): Constraint
     {
-        return $this->type->constraint();
+        return $this->type->constraint()->and(Of::callable(
+            static fn(string $string) => match (RUuid::isValid($string)) {
+                true => Validation::success($string),
+                false => Validation::fail(Failure::of('String is not a valid uuid')),
+            },
+        ));
     }
 
     public function toArray(): array

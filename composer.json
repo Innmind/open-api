@@ -21,7 +21,8 @@
         "innmind/http": "~7.0",
         "innmind/url": "~4.3",
         "innmind/url-template": "~3.1",
-        "innmind/media-type": "~2.2"
+        "innmind/media-type": "~2.2",
+        "ramsey/uuid": "~4.7"
     },
     "autoload": {
         "psr-4": {
