@@ -3,31 +3,23 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI;
 
-use Innmind\OpenAPI\Type\{
-    Shape,
-    Sequence,
-    Str,
-    Uuid,
-    Password,
-    Url,
-    Date,
-    DateTime,
-    File,
-    Integer,
-    Number,
-};
-
+/**
+ * @template T
+ */
 final class Request
 {
     private MediaType $mediaType;
-    private Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema;
+    /** @var Type<T> */
+    private Type $schema;
 
     /**
      * @psalm-mutation-free
+     *
+     * @param Type<T> $schema
      */
     private function __construct(
         MediaType $mediaType,
-        Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema,
+        Type $schema,
     ) {
         $this->mediaType = $mediaType;
         $this->schema = $schema;
@@ -35,10 +27,15 @@ final class Request
 
     /**
      * @psalm-pure
+     * @template A
+     *
+     * @param Type<A> $schema
+     *
+     * @return self<A>
      */
     public static function of(
         MediaType $mediaType,
-        Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema,
+        Type $schema,
     ): self {
         return new self(
             $mediaType,

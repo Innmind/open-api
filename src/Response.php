@@ -6,17 +6,8 @@ namespace Innmind\OpenAPI;
 use Innmind\OpenAPI\{
     Response\Definition,
     Response\Reference,
-    Type\Shape,
-    Type\Sequence,
+    Type,
     Type\Str,
-    Type\Uuid,
-    Type\Password,
-    Type\Url,
-    Type\Date,
-    Type\DateTime,
-    Type\File,
-    Type\Integer,
-    Type\Number,
 };
 use Innmind\Http\Response\StatusCode;
 
@@ -49,7 +40,7 @@ final class Response
      */
     public function sends(
         MediaType $mediaType,
-        Schema|Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $content,
+        Schema|Type $content,
         string $description = null,
     ): self {
         return new self(

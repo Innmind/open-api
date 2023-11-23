@@ -6,24 +6,15 @@ namespace Innmind\OpenAPI\Response;
 use Innmind\OpenAPI\{
     Schema,
     MediaType,
-    Type\Shape,
-    Type\Sequence,
+    Type,
     Type\Str,
-    Type\Uuid,
-    Type\Password,
-    Type\Url,
-    Type\Date,
-    Type\DateTime,
-    Type\File,
-    Type\Integer,
-    Type\Number,
 };
 use Innmind\Immutable\Map;
 
 final class Definition
 {
     private MediaType $mediaType;
-    private Schema|Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema;
+    private Schema|Type $schema;
     private ?string $description;
     /** @var Map<non-empty-string, Str> */
     private Map $headers;
@@ -35,7 +26,7 @@ final class Definition
      */
     private function __construct(
         MediaType $mediaType,
-        Schema|Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema,
+        Schema|Type $schema,
         ?string $description,
         Map $headers,
     ) {
@@ -50,7 +41,7 @@ final class Definition
      */
     public static function of(
         MediaType $mediaType,
-        Schema|Shape|Sequence|Str|Uuid|Password|Url|Date|DateTime|File|Integer|Number $schema,
+        Schema|Type $schema,
         ?string $description,
     ): self {
         return new self($mediaType, $schema, $description, Map::of());
