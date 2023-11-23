@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI;
 
+use Innmind\Router\Route;
 use Innmind\Http\Method;
+use Innmind\UrlTemplate\Template;
 use Innmind\Immutable\{
     Sequence,
     Set,
@@ -295,6 +297,18 @@ final class Operation
             $this->requests,
             $this->responses->append(Sequence::of($response, ...$responses)),
         );
+    }
+
+    public function route(Template $template): Route
+    {
+        $route = Route::of($this->method, $template);
+
+        if (\is_string($this->id)) {
+            /** @psalm-suppress ArgumentTypeCoercion */
+            $route = $route->named(Route\Name::of($this->id));
+        }
+
+        return $route;
     }
 
     public function toArray(): array

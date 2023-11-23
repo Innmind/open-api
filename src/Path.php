@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI;
 
+use Innmind\Router\Route;
 use Innmind\UrlTemplate\Template;
 use Innmind\Immutable\Sequence;
 
@@ -56,6 +57,16 @@ final class Path
             $this->template,
             $this->operations,
             $this->parameters->append(Sequence::of($parameter, ...$parameters)),
+        );
+    }
+
+    /**
+     * @return Sequence<Route>
+     */
+    public function routes(): Sequence
+    {
+        return $this->operations->map(
+            fn($operation) => $operation->route($this->template),
         );
     }
 

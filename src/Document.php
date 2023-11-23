@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI;
 
+use Innmind\Router\Route;
 use Innmind\Url\Url;
 use Innmind\Immutable\{
     Sequence,
@@ -206,6 +207,14 @@ final class Document
             $this->schemas,
             $this->paths->append($paths),
         );
+    }
+
+    /**
+     * @return Sequence<Route>
+     */
+    public function routes(): Sequence
+    {
+        return $this->paths->flatMap(static fn($path) => $path->routes());
     }
 
     /**
