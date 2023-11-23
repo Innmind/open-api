@@ -19,7 +19,6 @@ use Innmind\OpenAPI\{
     Type\Number,
 };
 use Innmind\Http\Response\StatusCode;
-use Innmind\MediaType\MediaType;
 
 final class Response
 {

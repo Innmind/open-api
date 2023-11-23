@@ -16,7 +16,6 @@ use Innmind\OpenAPI\Type\{
     Integer,
     Number,
 };
-use Innmind\MediaType\MediaType;
 
 final class Request
 {

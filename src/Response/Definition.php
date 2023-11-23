@@ -5,6 +5,7 @@ namespace Innmind\OpenAPI\Response;
 
 use Innmind\OpenAPI\{
     Schema,
+    MediaType,
     Type\Shape,
     Type\Sequence,
     Type\Str,
@@ -17,7 +18,6 @@ use Innmind\OpenAPI\{
     Type\Integer,
     Type\Number,
 };
-use Innmind\MediaType\MediaType;
 use Innmind\Immutable\Map;
 
 final class Definition

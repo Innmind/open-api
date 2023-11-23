@@ -11,10 +11,10 @@ use Innmind\OpenAPI\{
     Type\Str,
     Type\Password,
     Parameter,
+    MediaType,
 };
 use Innmind\Http\Response\StatusCode;
 use Innmind\UrlTemplate\Template;
-use Innmind\MediaType\MediaType;
 use Innmind\Immutable\Sequence;
 use Innmind\BlackBox\Set;
 use Fixtures\Innmind\OpenAPI\{
@@ -64,7 +64,7 @@ return static function() {
                             ->disableSecurity()
                             ->parameters(Parameter::path('username')->require())
                             ->requests(Request::of(
-                                MediaType::of('application/json'),
+                                MediaType::json,
                                 Shape::of()
                                     ->property('password', Password::of())
                                     ->require('password'),
@@ -72,7 +72,7 @@ return static function() {
                             ->responses(
                                 Response::of(StatusCode::ok)
                                     ->sends(
-                                        MediaType::of('application/json'),
+                                        MediaType::json,
                                         Schemas::login,
                                     )
                                     ->withHeader('x-logged-in', Str::of('some title')),

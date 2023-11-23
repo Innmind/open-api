@@ -8,8 +8,8 @@ use Innmind\OpenAPI\{
     Response\Reference,
     Type\Shape,
     Type\Str,
+    MediaType,
 };
-use Innmind\MediaType\MediaType;
 
 enum Response implements Reference
 {
@@ -23,7 +23,7 @@ enum Response implements Reference
     public function definition(): Definition
     {
         return Definition::of(
-            MediaType::of('application/json'),
+            MediaType::json,
             Shape::of()
                 ->property('message', Str::of())
                 ->require('message'),
