@@ -75,6 +75,11 @@ final class Str implements Type
         return Constrain::of($this, $constraint);
     }
 
+    public function or(Type $type): Type
+    {
+        return Any::of($this, $type);
+    }
+
     public function restrictVia(RegExp $pattern): self
     {
         return new self(

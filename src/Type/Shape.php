@@ -120,6 +120,11 @@ final class Shape implements Type
         return Constrain::of($this, $constraint);
     }
 
+    public function or(Type $type): Type
+    {
+        return Any::of($this, $type);
+    }
+
     public function constraint(Clock $clock): Constraint
     {
         $constraint = $this

@@ -41,6 +41,15 @@ interface Type
     public function constrain(Constraint $constraint): self;
 
     /**
+     * @template U
+     *
+     * @param self<U> $type
+     *
+     * @return self<T|U>
+     */
+    public function or(self $type): self;
+
+    /**
      * @psalm-mutation-free
      *
      * @return Constraint<mixed, T>

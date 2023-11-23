@@ -57,6 +57,11 @@ final class Url implements Type
         return Constrain::of($this, $constraint);
     }
 
+    public function or(Type $type): Type
+    {
+        return Any::of($this, $type);
+    }
+
     public function constraint(Clock $clock): Constraint
     {
         return $this->type->constraint($clock)->and(Of::callable(

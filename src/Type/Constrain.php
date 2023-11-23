@@ -69,6 +69,11 @@ final class Constrain implements Type
             ->and($this->constraint);
     }
 
+    public function or(Type $type): Type
+    {
+        return Any::of($this, $type);
+    }
+
     public function toArray(): array
     {
         return $this->type->toArray();

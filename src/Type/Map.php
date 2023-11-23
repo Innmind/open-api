@@ -61,6 +61,11 @@ final class Map implements Type
         return Constrain::of($this, $constraint);
     }
 
+    public function or(Type $type): Type
+    {
+        return Any::of($this, $type);
+    }
+
     public function constraint(Clock $clock): Constraint
     {
         /** @psalm-suppress ArgumentTypeCoercion Don't know why it loses the type */
