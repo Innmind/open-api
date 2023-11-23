@@ -40,21 +40,21 @@ final class Operation
         ?string $summary,
         ?string $description,
         ?string $id,
-        Set $tags,
-        bool $disableSecurity,
-        Sequence $parameters,
-        Sequence $requests,
-        Sequence $responses,
+        Set $tags = null,
+        bool $disableSecurity = false,
+        Sequence $parameters = null,
+        Sequence $requests = null,
+        Sequence $responses = null,
     ) {
         $this->method = $method;
         $this->id = $id;
         $this->summary = $summary;
         $this->description = $description;
-        $this->tags = $tags;
+        $this->tags = $tags ?? Set::of();
         $this->disableSecurity = $disableSecurity;
-        $this->parameters = $parameters;
-        $this->requests = $requests;
-        $this->responses = $responses;
+        $this->parameters = $parameters ?? Sequence::of();
+        $this->requests = $requests ?? Sequence::of();
+        $this->responses = $responses ?? Sequence::of();
     }
 
     /**
@@ -72,11 +72,6 @@ final class Operation
             $summary,
             $description,
             $id,
-            Set::of(),
-            false,
-            Sequence::of(),
-            Sequence::of(),
-            Sequence::of(),
         );
     }
 
@@ -95,11 +90,6 @@ final class Operation
             $summary,
             $description,
             $id,
-            Set::of(),
-            false,
-            Sequence::of(),
-            Sequence::of(),
-            Sequence::of(),
         );
     }
 
@@ -118,11 +108,6 @@ final class Operation
             $summary,
             $description,
             $id,
-            Set::of(),
-            false,
-            Sequence::of(),
-            Sequence::of(),
-            Sequence::of(),
         );
     }
 
@@ -141,11 +126,6 @@ final class Operation
             $summary,
             $description,
             $id,
-            Set::of(),
-            false,
-            Sequence::of(),
-            Sequence::of(),
-            Sequence::of(),
         );
     }
 
@@ -164,11 +144,6 @@ final class Operation
             $summary,
             $description,
             $id,
-            Set::of(),
-            false,
-            Sequence::of(),
-            Sequence::of(),
-            Sequence::of(),
         );
     }
 
@@ -187,11 +162,6 @@ final class Operation
             $summary,
             $description,
             $id,
-            Set::of(),
-            false,
-            Sequence::of(),
-            Sequence::of(),
-            Sequence::of(),
         );
     }
 
@@ -210,11 +180,6 @@ final class Operation
             $summary,
             $description,
             $id,
-            Set::of(),
-            false,
-            Sequence::of(),
-            Sequence::of(),
-            Sequence::of(),
         );
     }
 
@@ -233,11 +198,6 @@ final class Operation
             $summary,
             $description,
             $id,
-            Set::of(),
-            false,
-            Sequence::of(),
-            Sequence::of(),
-            Sequence::of(),
         );
     }
 
