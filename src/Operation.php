@@ -11,6 +11,9 @@ use Innmind\Immutable\{
     Set,
 };
 
+/**
+ * @template I
+ */
 final class Operation
 {
     private Method $method;
@@ -23,7 +26,7 @@ final class Operation
     private bool $disableSecurity;
     /** @var Sequence<Parameter> */
     private Sequence $parameters;
-    /** @var Sequence<Request> */
+    /** @var Sequence<Request<I>> */
     private Sequence $requests;
     /** @var Sequence<Response> */
     private Sequence $responses;
@@ -34,7 +37,7 @@ final class Operation
      * @param ?non-empty-string $id
      * @param Set<Tag> $tags
      * @param Sequence<Parameter> $parameters
-     * @param Sequence<Request> $requests
+     * @param Sequence<Request<I>> $requests
      * @param Sequence<Response> $responses
      */
     private function __construct(
@@ -205,6 +208,8 @@ final class Operation
 
     /**
      * @psalm-mutation-free
+     *
+     * @return self<I>
      */
     public function tags(Tag $tag, Tag ...$tags): self
     {
@@ -223,6 +228,8 @@ final class Operation
 
     /**
      * @psalm-mutation-free
+     *
+     * @return self<I>
      */
     public function disableSecurity(): self
     {
@@ -241,6 +248,8 @@ final class Operation
 
     /**
      * @psalm-mutation-free
+     *
+     * @return self<I>
      */
     public function parameters(
         Parameter $parameter,
@@ -261,11 +270,18 @@ final class Operation
 
     /**
      * @psalm-mutation-free
+     * @template T
+     *
+     * @param Request<T> $request
+     * @param Request<T> $requests
+     *
+     * @return self<I|T>
      */
     public function requests(
         Request $request,
         Request ...$requests,
     ): self {
+        /** @psalm-suppress InvalidArgument */
         return new self(
             $this->method,
             $this->summary,
@@ -281,6 +297,8 @@ final class Operation
 
     /**
      * @psalm-mutation-free
+     *
+     * @return self<I>
      */
     public function responses(
         Response $response,
