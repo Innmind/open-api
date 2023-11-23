@@ -7,7 +7,9 @@ use Innmind\TimeContinuum\Clock;
 use Innmind\Validation\Constraint;
 
 /**
- * @internal
+ * You can rely on this interface but DO NOT implement it as new methods may be
+ * added in the future.
+ *
  * @template T
  * @psalm-immutable
  */
