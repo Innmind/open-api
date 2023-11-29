@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI;
 
-use Innmind\Router\Route;
+use Innmind\Router\Under;
 use Innmind\UrlTemplate\Template;
 use Innmind\Immutable\Sequence;
 
@@ -60,13 +60,11 @@ final class Path
         );
     }
 
-    /**
-     * @return Sequence<Route>
-     */
-    public function routes(): Sequence
+    public function routes(): Under
     {
-        return $this->operations->map(
-            fn($operation) => $operation->route($this->template),
+        return $this->operations->reduce(
+            Under::of($this->template),
+            static fn(Under $under, $operation) => $operation->route($under),
         );
     }
 

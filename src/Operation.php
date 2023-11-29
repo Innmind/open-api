@@ -3,9 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\OpenAPI;
 
-use Innmind\Router\Route;
+use Innmind\Router\{
+    Under,
+    Route,
+};
 use Innmind\Http\Method;
-use Innmind\UrlTemplate\Template;
 use Innmind\Immutable\{
     Sequence,
     Set,
@@ -317,16 +319,21 @@ final class Operation
         );
     }
 
-    public function route(Template $template): Route
+    public function route(Under $under): Under
     {
-        $route = Route::of($this->method, $template);
+        /** @psalm-suppress ArgumentTypeCoercion */
+        $name = match (true) {
+            \is_string($this->id) => Route\Name::of($this->id),
+            default => null,
+        };
 
-        if (\is_string($this->id)) {
-            /** @psalm-suppress ArgumentTypeCoercion */
-            $route = $route->named(Route\Name::of($this->id));
-        }
-
-        return $route;
+        return $under->route(
+            $this->method,
+            static fn($route) => match ($name) {
+                null => $route,
+                default => $route->named($name),
+            },
+        );
     }
 
     public function toArray(): array
